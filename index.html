@@ -83,6 +83,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:
   <h1>🐻 公大頭環遊世界</h1>
   <button class="tbtn" id="adjBtn" onclick="toggleAdj()">📍 校正</button>
   <button class="tbtn green" onclick="addPin()">＋ 新增</button>
+  <button class="tbtn" style="background:rgba(142,68,173,0.7);border-color:#8e44ad;" onclick="exportPos()">📋 匯出位置</button>
 </div>
 
 <div id="stage">
@@ -465,6 +466,15 @@ function toast(msg){
 document.getElementById('overlay').addEventListener('click',e=>{
   if(e.target===document.getElementById('overlay'))closeAll();
 });
+
+function exportPos(){
+  const txt = markers.map(m=>`id:${m.id} px:${m.px.toFixed(1)} py:${m.py.toFixed(1)}`).join('\n');
+  navigator.clipboard.writeText(txt).then(()=>{
+    toast('📋 位置已複製！貼給豚豚更新HTML');
+  }).catch(()=>{
+    prompt('複製以下內容貼給豚豚：', txt);
+  });
+}
 </script>
 </body>
 </html>
