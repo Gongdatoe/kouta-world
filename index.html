@@ -452,20 +452,19 @@ function toggleAdj(){
 }
 
 function showExport(txt){
-  // 建立一個全螢幕的顯示區
+  const existing = document.getElementById('exportBox');
+  if(existing) existing.remove();
   const div = document.createElement('div');
   div.id = 'exportBox';
-  div.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;';
+  div.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;';
   div.innerHTML=`
-    <div style="background:#fff;border-radius:14px;padding:20px;max-width:400px;width:100%;">
-      <h3 style="margin-bottom:12px;font-size:15px;color:#333;">📋 請長按以下文字全選複製，貼給豚豚！</h3>
-      <textarea readonly style="width:100%;height:180px;font-size:12px;font-family:monospace;border:1px solid #ddd;border-radius:8px;padding:8px;resize:none;">${txt}</textarea>
-      <button onclick="document.getElementById('exportBox').remove()" style="margin-top:12px;width:100%;padding:10px;background:#e74c3c;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;">關閉</button>
+    <div style="background:#fff;border-radius:16px;padding:20px;width:100%;max-width:420px;">
+      <p style="font-size:14px;color:#333;margin-bottom:12px;font-weight:700;">📋 長按下方文字 → 全選 → 複製 → 貼給豚豚</p>
+      <div id="exportTxt" style="width:100%;min-height:160px;font-size:11px;font-family:monospace;border:2px solid #e74c3c;border-radius:8px;padding:10px;background:#fff8f8;color:#333;word-break:break-all;white-space:pre-wrap;user-select:all;-webkit-user-select:all;">${txt}</div>
+      <button onclick="document.getElementById('exportBox').remove()" style="margin-top:14px;width:100%;padding:12px;background:#e74c3c;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;">關閉</button>
     </div>
   `;
   document.body.appendChild(div);
-  // 自動選取文字方便複製
-  setTimeout(()=>{ div.querySelector('textarea').select(); }, 100);
 }
 
 // ═══════════════════════════════════
