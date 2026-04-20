@@ -133,7 +133,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:
 //  CONFIG
 // ═══════════════════════════════════
 const BASE = "./";
-const LS_KEY = "kouta_v5";
+const LS_KEY = "kouta_v6";
 
 const DEFAULTS = [
   {id:1, loc:"日本・京都金閣寺", msg:"奶奶快快好起來，帶我來這裡喝綠茶 🍵", px:82.9, py:40.5, img:BASE+"img1.jpg"},
@@ -378,7 +378,7 @@ function onPinClick(id){
   document.getElementById('cloc').textContent   = m.loc||`景點 #${id}`;
   document.getElementById('cmsg').textContent   = m.msg||'（點下方編輯填入留言）';
   const ci=document.getElementById('cimg'), cn=document.getElementById('cnoi');
-  if(m.img){ ci.src=m.img; ci.style.display='block'; cn.style.display='none'; }
+  if(m.img){ ci.src=m.img+'?'+Date.now(); ci.style.display='block'; cn.style.display='none'; }
   else{ ci.style.display='none'; cn.style.display='flex'; }
   document.getElementById('card').style.display='block';
   document.getElementById('edit').style.display='none';
