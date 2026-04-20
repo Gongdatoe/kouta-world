@@ -9,14 +9,13 @@
 <title>公大頭環遊世界 🐻</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:'Helvetica Neue',Arial,'Microsoft JhengHei',sans-serif;}
+html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,'Microsoft JhengHei',sans-serif;}
 
-#stage{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;cursor:grab;}
+#stage{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;cursor:grab;touch-action:none;}
 #stage.grabbing{cursor:grabbing;}
 #world{position:absolute;top:0;left:0;transform-origin:top left;}
-#world img{display:block;max-width:none;user-select:none;-webkit-user-drag:none;}
+#world img{display:block;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none;}
 
-/* pins 放在 #world 裡面，跟地圖一起縮放 */
 .pin{position:absolute;transform:translate(-50%,-100%);cursor:pointer;z-index:10;}
 .pin svg{display:block;filter:drop-shadow(0 3px 5px rgba(0,0,0,0.6));}
 .pin .num{position:absolute;top:8px;left:50%;transform:translateX(-50%);color:#fff;font-size:10px;font-weight:800;pointer-events:none;}
@@ -28,12 +27,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:
 #toolbar h1{color:#fff;font-size:13px;font-weight:700;white-space:nowrap;}
 .tbtn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:14px;padding:5px 12px;font-size:12px;cursor:pointer;white-space:nowrap;}
 .tbtn.on{background:#c0392b;border-color:#e74c3c;}
-.tbtn.green{background:rgba(39,174,96,0.7);border-color:#27ae60;}
 
 #overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;display:none;align-items:center;justify-content:center;padding:16px;}
 #overlay.show{display:flex;}
 
-/* postcard */
 #card{background:#fffef5;border-radius:14px;max-width:400px;width:100%;border:3px solid #e8dcc8;overflow:hidden;display:none;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
 .ch{background:linear-gradient(135deg,#8b1a1a,#e74c3c);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;}
 .ch h2{color:#fff;font-size:15px;font-weight:700;}
@@ -41,37 +38,24 @@ html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:
 .cimg{width:100%;aspect-ratio:4/3;background:#f0e8d8;overflow:hidden;border-bottom:2px dashed #e8dcc8;}
 .cimg img{width:100%;height:100%;object-fit:cover;}
 .cnoi{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:#ccc;}
-.cbody{padding:13px 17px 8px;}
+.cbody{padding:13px 17px 15px;}
 .ctag{display:inline-flex;align-items:center;gap:4px;background:#fdecea;border:1px solid #f5b7b1;border-radius:10px;padding:3px 9px;font-size:12px;color:#c0392b;font-weight:600;margin-bottom:7px;}
 .cmsg{font-size:15px;color:#444;line-height:1.7;font-style:italic;}
-.cfoot{padding:8px 15px 13px;border-top:1px dashed #e8dcc8;margin-top:5px;}
-.cfoot button{width:100%;padding:8px;border-radius:8px;border:1px solid #ddd;background:#f9f9f9;cursor:pointer;font-size:13px;color:#555;}
-
-/* edit */
-#edit{background:#fff;border-radius:14px;max-width:380px;width:100%;overflow:hidden;display:none;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
-.eh{background:linear-gradient(135deg,#2c3e50,#2980b9);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;}
-.eh h2{color:#fff;font-size:14px;font-weight:700;}
-.ebody{padding:14px 15px;display:flex;flex-direction:column;gap:11px;max-height:65vh;overflow-y:auto;}
-.elbl{font-size:11px;color:#888;margin-bottom:3px;display:block;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
-.einp{width:100%;border:1.5px solid #e0e0e0;border-radius:8px;padding:8px 10px;font-size:13px;outline:none;font-family:inherit;}
-.einp:focus{border-color:#2980b9;}
-.eta{resize:vertical;min-height:72px;}
-.eimg{border:2px dashed #ddd;border-radius:10px;padding:13px;text-align:center;cursor:pointer;background:#fafafa;}
-.eimg:hover{border-color:#2980b9;}
-.eimg input{display:none;}
-.eprev{width:100%;max-height:140px;object-fit:cover;border-radius:7px;display:none;margin-bottom:5px;}
-.ehint{color:#aaa;font-size:12px;}
-.efoot{display:flex;gap:8px;padding:11px 15px;border-top:1px solid #eee;}
-.ecancl{flex:1;padding:9px;border-radius:8px;border:1px solid #ddd;background:#f5f5f5;cursor:pointer;font-size:13px;color:#666;}
-.esave{flex:2;padding:9px;border-radius:8px;border:none;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;cursor:pointer;font-size:13px;font-weight:700;}
 
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(39,174,96,.95);color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;z-index:500;opacity:0;transition:opacity .3s;pointer-events:none;}
 #toast.show{opacity:1;}
 #hint{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.5);color:rgba(255,255,255,.8);padding:5px 13px;border-radius:14px;font-size:11px;z-index:150;pointer-events:none;}
+
 #loading{position:fixed;inset:0;background:#1a1a2e;z-index:400;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
 #loading p{color:#aaa;font-size:13px;}
 .spin{width:36px;height:36px;border:3px solid rgba(255,255,255,.15);border-top-color:#e74c3c;border-radius:50%;animation:sp .8s linear infinite;}
 @keyframes sp{to{transform:rotate(360deg)}}
+
+#exportBox{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+#exportBox .inner{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:420px;}
+#exportBox p{font-size:14px;color:#333;margin-bottom:12px;font-weight:700;}
+#exportBox .txt{width:100%;min-height:160px;font-size:11px;font-family:monospace;border:2px solid #e74c3c;border-radius:8px;padding:10px;background:#fff8f8;color:#333;white-space:pre-wrap;user-select:all;-webkit-user-select:all;}
+#exportBox button{margin-top:14px;width:100%;padding:12px;background:#e74c3c;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -79,48 +63,30 @@ html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:
 <div id="loading">
   <div style="font-size:52px">🌍</div>
   <div class="spin"></div>
-  <p>地圖載入中，請稍候...</p>
+  <p>載入中...</p>
 </div>
 
 <div id="toolbar">
   <h1>🐻 公大頭環遊世界</h1>
-  <button class="tbtn" id="adjBtn" onclick="toggleAdj()">📍 校正</button>
+  <button class="tbtn" id="adjBtn">📍 校正</button>
 </div>
 
 <div id="stage">
   <div id="world">
     <img id="mapImg" alt="世界地圖">
-    <!-- pins will be injected here -->
   </div>
 </div>
 
 <div id="overlay">
   <div id="card">
-    <div class="ch"><h2 id="ctitle"></h2><button class="xbtn" onclick="closeAll()">✕</button></div>
-    <div class="cimg"><img id="cimg" style="display:none"><div class="cnoi" id="cnoi"><span style="font-size:36px">✈️</span><span style="font-size:12px">尚未上傳照片</span></div></div>
+    <div class="ch"><h2 id="ctitle"></h2><button class="xbtn" id="closeBtn">✕</button></div>
+    <div class="cimg">
+      <img id="cimg" style="display:none">
+      <div class="cnoi" id="cnoi"><span style="font-size:36px">✈️</span><span style="font-size:12px">尚未上傳照片</span></div>
+    </div>
     <div class="cbody">
       <div class="ctag"><span>📍</span><span id="cloc"></span></div>
       <div class="cmsg" id="cmsg"></div>
-    </div>
-    <div class="cfoot"><button onclick="openEdit()">✏️ 編輯此地點</button></div>
-  </div>
-
-  <div id="edit">
-    <div class="eh"><h2>✏️ 編輯地點</h2><button class="xbtn" onclick="closeAll()">✕</button></div>
-    <div class="ebody">
-      <div><span class="elbl">📍 地點名稱</span><input class="einp" id="eloc" placeholder="例：日本金閣寺"></div>
-      <div><span class="elbl">💬 留言</span><textarea class="einp eta" id="emsg" placeholder="寫一段溫暖的話..."></textarea></div>
-      <div><span class="elbl">🖼️ 照片</span>
-        <div class="eimg" onclick="document.getElementById('efile').click()">
-          <input type="file" id="efile" accept="image/*" onchange="onFile(this)">
-          <img id="eprev" class="eprev">
-          <div id="ehint" class="ehint">👆 點此選擇照片</div>
-        </div>
-      </div>
-    </div>
-    <div class="efoot">
-      <button class="ecancl" onclick="closeAll()">取消</button>
-      <button class="esave" onclick="doSave()">✅ 儲存</button>
     </div>
   </div>
 </div>
@@ -129,399 +95,355 @@ html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:
 <div id="hint">拖曳平移 ‧ 雙指縮放</div>
 
 <script>
-// ═══════════════════════════════════
-//  CONFIG
-// ═══════════════════════════════════
-const BASE = "./";
-const V = Date.now();
-const LS_KEY = "kouta_v7_pos_only"; // 只存位置，新版本強制重置
+(function(){
+  'use strict';
 
-// 清除舊版本 localStorage
-try{
-  ['kouta_v3','kouta_v4','kouta_v5','kouta_v6'].forEach(k=>localStorage.removeItem(k));
-}catch(e){}
-const LS_KEY = "kouta_v6";
+  const V = Date.now();
+  const LS_KEY = "kouta_pos_v1";
 
-const DEFAULTS = [
-  {id:1, loc:"日本・京都金閣寺", msg:"奶奶快快好起來，帶我來這裡喝綠茶 🍵", px:82.9, py:40.5, img:BASE+"img1.jpg?"+V},
-  {id:2, loc:"瑞士・馬特洪峰",   msg:"奶奶你看我堆雪人，有沒有很可愛？⛄",   px:48.2, py:32.7, img:BASE+"img2.jpg?"+V},
-  {id:3, loc:"法國・凡爾賽宮",   msg:"奶奶快點跟我來這裡追蝴蝶吹泡泡 🦋",   px:47.0, py:34.1, img:BASE+"img3.jpg?"+V},
-  {id:4, loc:"南非・薩凡納狩獵", msg:"奶奶這裡好多動物哦！噓，要小聲一點哦！🦏", px:52.9, py:67.7, img:BASE+"img4.jpg?"+V},
-  {id:5,  loc:"",msg:"",px:15.1,py:40.5,img:""},
-  {id:6,  loc:"",msg:"",px:32.1,py:57.6,img:""},
-  {id:7, loc:"埃及・吉薩金字塔", msg:"奶奶那個是金字塔耶！木乃伊會不會出來嚇熊？！🏺", px:54.2, py:46.2, img:BASE+"img7.jpg?"+V},
-  {id:8,  loc:"",msg:"",px:73.5,py:53.9,img:""},
-  {id:9,  loc:"",msg:"",px:84.8,py:73.5,img:""},
-  {id:10, loc:"",msg:"",px:35.8,py:15.7,img:""},
-  {id:11, loc:"",msg:"",px:52.1,py:28.3,img:""},
-  {id:12, loc:"",msg:"",px:75.8,py:36.0,img:""},
-];
-
-// ═══════════════════════════════════
-//  STATE
-// ═══════════════════════════════════
-let markers = [];
-let adjMode = false;
-let activeId = null;
-let editImg = "";
-let mapW = 0, mapH = 0;
-
-// pan/zoom — applied to #world
-let ox=0, oy=0, sc=1;
-let panning=false, ps={x:0,y:0}, po={x:0,y:0};
-let ldist=0, ltouch=null;
-
-const stage = document.getElementById('stage');
-const world = document.getElementById('world');
-const mapImg = document.getElementById('mapImg');
-
-// ═══════════════════════════════════
-//  STORAGE
-// ═══════════════════════════════════
-function save(){
+  // 清除舊版本資料
   try{
-    // 只存位置，不存內容！地點、文字、圖片永遠以 HTML 為主
-    const posOnly = markers.map(m=>({id:m.id, px:m.px, py:m.py}));
-    localStorage.setItem(LS_KEY, JSON.stringify(posOnly));
-  }
-  catch(e){ toast("⚠️ 儲存失敗"); }
-}
-function load(){
-  try{ const d=localStorage.getItem(LS_KEY); return d?JSON.parse(d):null; }
-  catch(e){ return null; }
-}
-
-// ═══════════════════════════════════
-//  INIT
-// ═══════════════════════════════════
-window.addEventListener('load', ()=>{
-  // merge saved over defaults
-  const saved = load();
-  if(saved){
-    markers = DEFAULTS.map(def=>{
-      const s = saved.find(x=>x.id===def.id);
-      if(!s) return {...def};
-      // 只保留校正過的位置，地點/文字/圖片永遠用HTML裡的
-      return {...def, px:s.px??def.px, py:s.py??def.py};
+    ['kouta_v3','kouta_v4','kouta_v5','kouta_v6','kouta_v7_pos_only'].forEach(k=>{
+      try{ localStorage.removeItem(k); }catch(e){}
     });
-  } else {
-    markers = DEFAULTS.map(d=>({...d}));
+  }catch(e){}
+
+  // ═══════════════════════════════════
+  //  預設資料（以 HTML 為準，最新版本）
+  // ═══════════════════════════════════
+  const DEFAULTS = [
+    {id:1, loc:"日本・京都金閣寺", msg:"奶奶快快好起來，帶我來這裡喝綠茶 🍵", px:82.9, py:40.5, img:"img1.jpg"},
+    {id:2, loc:"瑞士・馬特洪峰",   msg:"奶奶你看我堆雪人，有沒有很可愛？⛄",   px:48.2, py:32.7, img:"img2.jpg"},
+    {id:3, loc:"法國・凡爾賽宮",   msg:"奶奶快點跟我來這裡追蝴蝶吹泡泡 🦋",   px:47.0, py:34.1, img:"img3.jpg"},
+    {id:4, loc:"南非・薩凡納狩獵", msg:"奶奶這裡好多動物哦！噓，要小聲一點哦！🦏", px:52.9, py:67.7, img:"img4.jpg"},
+    {id:5,  loc:"",msg:"",px:15.1,py:40.5,img:""},
+    {id:6,  loc:"",msg:"",px:32.1,py:57.6,img:""},
+    {id:7, loc:"埃及・吉薩金字塔", msg:"奶奶那個是金字塔耶！木乃伊會不會出來嚇熊？！🏺", px:54.2, py:46.2, img:"img7.jpg"},
+    {id:8,  loc:"",msg:"",px:73.5,py:53.9,img:""},
+    {id:9,  loc:"",msg:"",px:84.8,py:73.5,img:""},
+    {id:10, loc:"",msg:"",px:35.8,py:15.7,img:""},
+    {id:11, loc:"",msg:"",px:52.1,py:28.3,img:""},
+    {id:12, loc:"",msg:"",px:75.8,py:36.0,img:""},
+  ];
+
+  // ═══════════════════════════════════
+  //  State
+  // ═══════════════════════════════════
+  let markers = [];
+  let adjMode = false;
+  let mapW = 0, mapH = 0;
+  let ox = 0, oy = 0, sc = 1;
+  let panning = false, ps = {x:0,y:0}, po = {x:0,y:0};
+  let ldist = 0, ltouch = null;
+
+  const stage = document.getElementById('stage');
+  const world = document.getElementById('world');
+  const mapImg = document.getElementById('mapImg');
+  const overlay = document.getElementById('overlay');
+
+  // ═══════════════════════════════════
+  //  Storage (只存位置)
+  // ═══════════════════════════════════
+  function savePos(){
+    try{
+      const pos = markers.map(m=>({id:m.id, px:m.px, py:m.py}));
+      localStorage.setItem(LS_KEY, JSON.stringify(pos));
+    }catch(e){}
   }
 
-  mapImg.onload = onMapLoaded;
-  mapImg.onerror = ()=>{
-    document.getElementById('loading').innerHTML =
-      '<p style="color:#e74c3c;font-size:14px;text-align:center">⚠️ 地圖載入失敗<br>請確認 GitHub 上有 Map.png</p>';
-  };
-  mapImg.src = BASE + "Map.jpg?" + V;
+  function loadPos(){
+    try{
+      const d = localStorage.getItem(LS_KEY);
+      return d ? JSON.parse(d) : null;
+    }catch(e){ return null; }
+  }
 
-  setupGestures();
-});
+  // ═══════════════════════════════════
+  //  Init markers（內容用 DEFAULTS，位置用 localStorage）
+  // ═══════════════════════════════════
+  function initMarkers(){
+    const saved = loadPos();
+    markers = DEFAULTS.map(def=>{
+      const p = saved ? saved.find(s=>s.id===def.id) : null;
+      return {
+        id: def.id,
+        loc: def.loc,
+        msg: def.msg,
+        img: def.img ? def.img + "?" + V : "",
+        px: p && typeof p.px === 'number' ? p.px : def.px,
+        py: p && typeof p.py === 'number' ? p.py : def.py,
+      };
+    });
+  }
 
-function onMapLoaded(){
-  mapW = mapImg.naturalWidth;
-  mapH = mapImg.naturalHeight;
-  // set world size explicitly
-  world.style.width = mapW + "px";
-  world.style.height = mapH + "px";
-  mapImg.style.width = mapW + "px";
-  mapImg.style.height = mapH + "px";
+  // ═══════════════════════════════════
+  //  Map
+  // ═══════════════════════════════════
+  function loadMap(){
+    mapImg.onload = function(){
+      mapW = mapImg.naturalWidth;
+      mapH = mapImg.naturalHeight;
+      world.style.width = mapW + "px";
+      world.style.height = mapH + "px";
+      mapImg.style.width = mapW + "px";
+      mapImg.style.height = mapH + "px";
 
-  // fit map to screen
-  const sw = stage.offsetWidth;
-  const sh = stage.offsetHeight;
-  sc = Math.max(sw/mapW, sh/mapH);
-  ox = (sw - mapW*sc) / 2;
-  oy = (sh - mapH*sc) / 2;
-  applyTransform();
+      fitMap();
+      renderPins();
+      document.getElementById('loading').style.display = 'none';
+    };
+    mapImg.onerror = function(){
+      document.getElementById('loading').innerHTML =
+        '<p style="color:#e74c3c;font-size:14px;text-align:center">⚠️ 地圖載入失敗<br>請確認 GitHub 上有 Map.jpg</p>';
+    };
+    mapImg.src = "Map.jpg?" + V;
+  }
 
-  renderPins();
-  document.getElementById('loading').style.display = 'none';
-}
-
-// ═══════════════════════════════════
-//  TRANSFORM — applied to #world div
-// ═══════════════════════════════════
-function applyTransform(){
-  world.style.transform = `translate(${ox}px,${oy}px) scale(${sc})`;
-}
-
-// ═══════════════════════════════════
-//  PINS — placed inside #world
-//  so they scale WITH the map automatically
-// ═══════════════════════════════════
-function renderPins(){
-  document.querySelectorAll('.pin').forEach(e=>e.remove());
-  markers.forEach(makePin);
-}
-
-function makePin(m){
-  const filled = m.loc||m.img||m.msg;
-  const el = document.createElement('div');
-  el.className = 'pin';
-  el.id = 'pin'+m.id;
-  // position in map's natural pixel space
-  el.style.left = (m.px/100 * mapW) + 'px';
-  el.style.top  = (m.py/100 * mapH) + 'px';
-  el.innerHTML = `
-    <svg width="32" height="44" viewBox="0 0 32 44">
-      <path d="M16 0C7.163 0 0 7.163 0 16c0 12 16 28 16 28S32 28 32 16C32 7.163 24.837 0 16 0z"
-        fill="${filled?'#e74c3c':'rgba(150,150,150,0.45)'}"/>
-      <circle cx="16" cy="16" r="7" fill="white" opacity=".9"/>
-    </svg>
-    <span class="num">${m.id}</span>
-    ${m.loc?`<div class="lbl">${m.loc}</div>`:''}
-  `;
-  el.addEventListener('click', e=>{ e.stopPropagation(); onPinClick(m.id); });
-  setupPinDrag(el, m);
-  world.appendChild(el);
-}
-
-function setupPinDrag(el, m){
-  let drag=false, sx,sy, ox0,oy0;
-
-  const start=(cx,cy)=>{
-    if(!adjMode) return;
-    drag=true; sx=cx; sy=cy;
-    ox0=m.px; oy0=m.py;
-    el.classList.add('dragging');
-  };
-  // convert screen delta → map percentage
-  const move=(cx,cy)=>{
-    if(!drag) return;
-    const dx = (cx-sx)/sc;  // screen px → map px
-    const dy = (cy-sy)/sc;
-    m.px = Math.max(0,Math.min(100, ox0 + dx/mapW*100));
-    m.py = Math.max(0,Math.min(100, oy0 + dy/mapH*100));
-    el.style.left = (m.px/100*mapW)+'px';
-    el.style.top  = (m.py/100*mapH)+'px';
-  };
-  const end=()=>{ if(!drag)return; drag=false; el.classList.remove('dragging'); save(); };
-
-  el.addEventListener('mousedown',e=>{ if(adjMode){e.stopPropagation();e.preventDefault();start(e.clientX,e.clientY);}});
-  window.addEventListener('mousemove',e=>{ if(drag)move(e.clientX,e.clientY); });
-  window.addEventListener('mouseup',end);
-
-  el.addEventListener('touchstart',e=>{ if(adjMode){e.stopPropagation();e.preventDefault();start(e.touches[0].clientX,e.touches[0].clientY);}},{passive:false});
-  window.addEventListener('touchmove',e=>{ if(drag){e.preventDefault();move(e.touches[0].clientX,e.touches[0].clientY);}},{passive:false});
-  window.addEventListener('touchend',end);
-}
-
-// ═══════════════════════════════════
-//  GESTURES (pan / pinch-zoom)
-// ═══════════════════════════════════
-function setupGestures(){
-  // mouse
-  stage.addEventListener('mousedown',e=>{
-    if(adjMode)return;
-    panning=true; ps={x:e.clientX,y:e.clientY}; po={x:ox,y:oy};
-    stage.classList.add('grabbing');
-  });
-  window.addEventListener('mousemove',e=>{
-    if(!panning)return;
-    ox=po.x+(e.clientX-ps.x);
-    oy=po.y+(e.clientY-ps.y);
+  function fitMap(){
+    const sw = stage.offsetWidth;
+    const sh = stage.offsetHeight;
+    sc = Math.max(sw/mapW, sh/mapH);
+    ox = (sw - mapW*sc) / 2;
+    oy = (sh - mapH*sc) / 2;
     applyTransform();
-  });
-  window.addEventListener('mouseup',()=>{ panning=false; stage.classList.remove('grabbing'); });
+  }
 
-  // wheel
-  stage.addEventListener('wheel',e=>{
-    e.preventDefault();
-    doZoom(e.deltaY<0?1.1:0.9, e.clientX, e.clientY);
-  },{passive:false});
+  function applyTransform(){
+    world.style.transform = 'translate('+ox+'px,'+oy+'px) scale('+sc+')';
+  }
 
-  // touch
-  stage.addEventListener('touchstart',e=>{
-    if(adjMode)return;
-    if(e.touches.length===1){
-      ltouch={x:e.touches[0].clientX,y:e.touches[0].clientY};
-      po={x:ox,y:oy};
+  // ═══════════════════════════════════
+  //  Pins
+  // ═══════════════════════════════════
+  function renderPins(){
+    const old = world.querySelectorAll('.pin');
+    old.forEach(e=>e.remove());
+    markers.forEach(makePin);
+  }
+
+  function makePin(m){
+    const filled = m.loc || m.img || m.msg;
+    const el = document.createElement('div');
+    el.className = 'pin';
+    el.id = 'pin'+m.id;
+    el.style.left = (m.px/100 * mapW) + 'px';
+    el.style.top  = (m.py/100 * mapH) + 'px';
+    el.innerHTML =
+      '<svg width="32" height="44" viewBox="0 0 32 44">'+
+      '<path d="M16 0C7.163 0 0 7.163 0 16c0 12 16 28 16 28S32 28 32 16C32 7.163 24.837 0 16 0z" fill="'+(filled?'#e74c3c':'rgba(150,150,150,0.45)')+'"/>'+
+      '<circle cx="16" cy="16" r="7" fill="white" opacity=".9"/>'+
+      '</svg>'+
+      '<span class="num">'+m.id+'</span>'+
+      (m.loc?'<div class="lbl">'+m.loc+'</div>':'');
+    el.addEventListener('click', function(e){
+      e.stopPropagation();
+      onPinClick(m.id);
+    });
+    setupPinDrag(el, m);
+    world.appendChild(el);
+  }
+
+  function setupPinDrag(el, m){
+    let drag=false, sx,sy, ox0,oy0;
+
+    function start(cx, cy){
+      if(!adjMode) return;
+      drag=true; sx=cx; sy=cy;
+      ox0=m.px; oy0=m.py;
+      el.classList.add('dragging');
     }
-    if(e.touches.length===2) ldist=tDist(e);
-  },{passive:true});
+    function move(cx, cy){
+      if(!drag) return;
+      const dx = (cx-sx)/sc;
+      const dy = (cy-sy)/sc;
+      m.px = Math.max(0,Math.min(100, ox0 + dx/mapW*100));
+      m.py = Math.max(0,Math.min(100, oy0 + dy/mapH*100));
+      el.style.left = (m.px/100*mapW)+'px';
+      el.style.top  = (m.py/100*mapH)+'px';
+    }
+    function end(){
+      if(!drag) return;
+      drag=false;
+      el.classList.remove('dragging');
+      savePos();
+    }
 
-  stage.addEventListener('touchmove',e=>{
-    if(adjMode)return;
-    e.preventDefault();
-    if(e.touches.length===1&&ltouch){
-      ox=po.x+(e.touches[0].clientX-ltouch.x);
-      oy=po.y+(e.touches[0].clientY-ltouch.y);
+    el.addEventListener('mousedown', function(e){
+      if(adjMode){ e.stopPropagation(); e.preventDefault(); start(e.clientX, e.clientY); }
+    });
+    window.addEventListener('mousemove', function(e){ if(drag) move(e.clientX, e.clientY); });
+    window.addEventListener('mouseup', end);
+
+    el.addEventListener('touchstart', function(e){
+      if(adjMode){ e.stopPropagation(); e.preventDefault(); start(e.touches[0].clientX, e.touches[0].clientY); }
+    }, {passive:false});
+    window.addEventListener('touchmove', function(e){
+      if(drag){ e.preventDefault(); move(e.touches[0].clientX, e.touches[0].clientY); }
+    }, {passive:false});
+    window.addEventListener('touchend', end);
+  }
+
+  // ═══════════════════════════════════
+  //  Gestures
+  // ═══════════════════════════════════
+  function setupGestures(){
+    stage.addEventListener('mousedown', function(e){
+      if(adjMode) return;
+      panning=true; ps={x:e.clientX,y:e.clientY}; po={x:ox,y:oy};
+      stage.classList.add('grabbing');
+    });
+    window.addEventListener('mousemove', function(e){
+      if(!panning) return;
+      ox=po.x+(e.clientX-ps.x);
+      oy=po.y+(e.clientY-ps.y);
       applyTransform();
-    }
-    if(e.touches.length===2){
-      const d=tDist(e);
-      if(ldist){
-        const cx=(e.touches[0].clientX+e.touches[1].clientX)/2;
-        const cy=(e.touches[0].clientY+e.touches[1].clientY)/2;
-        doZoom(d/ldist,cx,cy);
+    });
+    window.addEventListener('mouseup', function(){
+      panning=false; stage.classList.remove('grabbing');
+    });
+
+    stage.addEventListener('wheel', function(e){
+      e.preventDefault();
+      doZoom(e.deltaY<0?1.1:0.9, e.clientX, e.clientY);
+    }, {passive:false});
+
+    stage.addEventListener('touchstart', function(e){
+      if(adjMode) return;
+      if(e.touches.length===1){
+        ltouch={x:e.touches[0].clientX, y:e.touches[0].clientY};
+        po={x:ox, y:oy};
       }
-      ldist=d;
+      if(e.touches.length===2) ldist=tDist(e);
+    }, {passive:true});
+
+    stage.addEventListener('touchmove', function(e){
+      if(adjMode) return;
+      e.preventDefault();
+      if(e.touches.length===1 && ltouch){
+        ox=po.x+(e.touches[0].clientX-ltouch.x);
+        oy=po.y+(e.touches[0].clientY-ltouch.y);
+        applyTransform();
+      }
+      if(e.touches.length===2){
+        const d=tDist(e);
+        if(ldist){
+          const cx=(e.touches[0].clientX+e.touches[1].clientX)/2;
+          const cy=(e.touches[0].clientY+e.touches[1].clientY)/2;
+          doZoom(d/ldist, cx, cy);
+        }
+        ldist=d;
+      }
+    }, {passive:false});
+
+    stage.addEventListener('touchend', function(){ ltouch=null; ldist=0; });
+
+    let rt;
+    window.addEventListener('resize', function(){
+      clearTimeout(rt);
+      rt=setTimeout(function(){ if(mapW) fitMap(); }, 200);
+    });
+  }
+
+  function doZoom(f, cx, cy){
+    const ns = Math.min(10, Math.max(0.2, sc*f));
+    ox = cx-(cx-ox)*(ns/sc);
+    oy = cy-(cy-oy)*(ns/sc);
+    sc = ns;
+    applyTransform();
+  }
+
+  function tDist(e){
+    const dx=e.touches[0].clientX-e.touches[1].clientX;
+    const dy=e.touches[0].clientY-e.touches[1].clientY;
+    return Math.sqrt(dx*dx+dy*dy);
+  }
+
+  // ═══════════════════════════════════
+  //  Pin click → card
+  // ═══════════════════════════════════
+  function onPinClick(id){
+    if(adjMode) return;
+    const m = markers.find(function(x){ return x.id===id; });
+    if(!m) return;
+    document.getElementById('ctitle').textContent = m.loc || '景點 #'+id;
+    document.getElementById('cloc').textContent = m.loc || '景點 #'+id;
+    document.getElementById('cmsg').textContent = m.msg || '（尚未填寫留言）';
+    const ci = document.getElementById('cimg');
+    const cn = document.getElementById('cnoi');
+    if(m.img){
+      ci.src = m.img;
+      ci.style.display = 'block';
+      cn.style.display = 'none';
+    } else {
+      ci.style.display = 'none';
+      cn.style.display = 'flex';
     }
-  },{passive:false});
-
-  stage.addEventListener('touchend',()=>{ ltouch=null; ldist=0; });
-  window.addEventListener('resize',()=>{ if(mapW) onMapLoaded(); });
-}
-
-function doZoom(f,cx,cy){
-  const ns=Math.min(10,Math.max(0.2,sc*f));
-  ox=cx-(cx-ox)*(ns/sc);
-  oy=cy-(cy-oy)*(ns/sc);
-  sc=ns;
-  applyTransform();
-}
-function tDist(e){
-  const dx=e.touches[0].clientX-e.touches[1].clientX;
-  const dy=e.touches[0].clientY-e.touches[1].clientY;
-  return Math.sqrt(dx*dx+dy*dy);
-}
-
-// ═══════════════════════════════════
-//  PIN CLICK → POSTCARD
-// ═══════════════════════════════════
-function onPinClick(id){
-  if(adjMode)return;
-  activeId=id;
-  const m=markers.find(x=>x.id===id); if(!m)return;
-  document.getElementById('ctitle').textContent = m.loc||`景點 #${id}`;
-  document.getElementById('cloc').textContent   = m.loc||`景點 #${id}`;
-  document.getElementById('cmsg').textContent   = m.msg||'（點下方編輯填入留言）';
-  const ci=document.getElementById('cimg'), cn=document.getElementById('cnoi');
-  if(m.img){ ci.src=m.img+'?'+Date.now(); ci.style.display='block'; cn.style.display='none'; }
-  else{ ci.style.display='none'; cn.style.display='flex'; }
-  document.getElementById('card').style.display='block';
-  document.getElementById('edit').style.display='none';
-  document.getElementById('overlay').classList.add('show');
-}
-
-// ═══════════════════════════════════
-//  EDIT
-// ═══════════════════════════════════
-function openEdit(){
-  const m=markers.find(x=>x.id===activeId); if(!m)return;
-  document.getElementById('eloc').value=m.loc||'';
-  document.getElementById('emsg').value=m.msg||'';
-  editImg=m.img||'';
-  const pr=document.getElementById('eprev'), hi=document.getElementById('ehint');
-  if(editImg){ pr.src=editImg; pr.style.display='block'; hi.style.display='none'; }
-  else{ pr.style.display='none'; hi.style.display='block'; }
-  document.getElementById('card').style.display='none';
-  document.getElementById('edit').style.display='block';
-}
-
-function onFile(input){
-  if(!input.files[0])return;
-  const r=new FileReader();
-  r.onload=e=>{
-    editImg=e.target.result;
-    const p=document.getElementById('eprev');
-    p.src=editImg; p.style.display='block';
-    document.getElementById('ehint').style.display='none';
-  };
-  r.readAsDataURL(input.files[0]);
-}
-
-function deletePin(){
-  if(!activeId) return;
-  // 前12個預設標記不能刪，只能清空內容
-  const isDefault = DEFAULTS.find(d=>d.id===activeId);
-  if(isDefault){
-    toast('⚠️ 預設標記無法刪除，只能清空內容');
-    return;
+    document.getElementById('card').style.display = 'block';
+    overlay.classList.add('show');
   }
-  markers = markers.filter(m=>m.id!==activeId);
-  const el=document.getElementById('pin'+activeId);
-  if(el) el.remove();
-  save();
-  closeAll();
-  toast('🗑️ 標記已刪除');
-}
 
-function doSave(){
-  const m=markers.find(x=>x.id===activeId); if(!m)return;
-  m.loc=document.getElementById('eloc').value.trim();
-  m.msg=document.getElementById('emsg').value.trim();
-  m.img=editImg;
-  save();
-  const el=document.getElementById('pin'+m.id); if(el)el.remove();
-  makePin(m);
-  closeAll();
-  toast('✅ 儲存成功！');
-}
-
-// ═══════════════════════════════════
-//  ADD PIN
-// ═══════════════════════════════════
-function addPin(){
-  const newId = markers.length ? Math.max(...markers.map(m=>m.id))+1 : 1;
-  const m={id:newId,loc:'',msg:'',px:50,py:45,img:''};
-  markers.push(m);
-  makePin(m);
-  save();
-  activeId=newId;
-  openEdit();
-}
-
-// ═══════════════════════════════════
-//  ADJUST MODE
-// ═══════════════════════════════════
-function toggleAdj(){
-  adjMode=!adjMode;
-  const btn=document.getElementById('adjBtn');
-  btn.classList.toggle('on',adjMode);
-  btn.textContent=adjMode?'✅ 完成校正':'📍 校正';
-  document.getElementById('hint').textContent=adjMode?'拖曳紅標調整位置':'拖曳平移 ‧ 雙指縮放';
-  if(!adjMode){
-    save();
-    const txt = markers.map(m=>`id:${m.id} px:${m.px.toFixed(1)} py:${m.py.toFixed(1)}`).join('\n');
-    showExport(txt);
+  function closeAll(){
+    overlay.classList.remove('show');
+    document.getElementById('card').style.display = 'none';
   }
-}
 
-function showExport(txt){
-  const existing = document.getElementById('exportBox');
-  if(existing) existing.remove();
-  const div = document.createElement('div');
-  div.id = 'exportBox';
-  div.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;';
-  div.innerHTML=`
-    <div style="background:#fff;border-radius:16px;padding:20px;width:100%;max-width:420px;">
-      <p style="font-size:14px;color:#333;margin-bottom:12px;font-weight:700;">📋 長按下方文字 → 全選 → 複製 → 貼給豚豚</p>
-      <div id="exportTxt" style="width:100%;min-height:160px;font-size:11px;font-family:monospace;border:2px solid #e74c3c;border-radius:8px;padding:10px;background:#fff8f8;color:#333;word-break:break-all;white-space:pre-wrap;user-select:all;-webkit-user-select:all;">${txt}</div>
-      <button onclick="document.getElementById('exportBox').remove()" style="margin-top:14px;width:100%;padding:12px;background:#e74c3c;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;">關閉</button>
-    </div>
-  `;
-  document.body.appendChild(div);
-}
+  // ═══════════════════════════════════
+  //  Adjust mode
+  // ═══════════════════════════════════
+  function toggleAdj(){
+    adjMode = !adjMode;
+    const btn = document.getElementById('adjBtn');
+    btn.classList.toggle('on', adjMode);
+    btn.textContent = adjMode ? '✅ 完成' : '📍 校正';
+    document.getElementById('hint').textContent = adjMode ? '拖曳紅標調整位置' : '拖曳平移 ‧ 雙指縮放';
+    if(!adjMode){
+      savePos();
+      const txt = markers.map(function(m){
+        return 'id:'+m.id+' px:'+m.px.toFixed(1)+' py:'+m.py.toFixed(1);
+      }).join('\n');
+      showExport(txt);
+    }
+  }
 
-// ═══════════════════════════════════
-//  HELPERS
-// ═══════════════════════════════════
-function closeAll(){
-  document.getElementById('overlay').classList.remove('show');
-  document.getElementById('card').style.display='none';
-  document.getElementById('edit').style.display='none';
-  activeId=null; editImg='';
-  document.getElementById('efile').value='';
-}
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
-}
-document.getElementById('overlay').addEventListener('click',e=>{
-  if(e.target===document.getElementById('overlay'))closeAll();
-});
+  function showExport(txt){
+    const existing = document.getElementById('exportBox');
+    if(existing) existing.remove();
+    const div = document.createElement('div');
+    div.id = 'exportBox';
+    div.innerHTML =
+      '<div class="inner">'+
+      '<p>📋 長按下方文字 → 全選 → 複製 → 貼給豚豚</p>'+
+      '<div class="txt">'+txt+'</div>'+
+      '<button>關閉</button>'+
+      '</div>';
+    document.body.appendChild(div);
+    div.querySelector('button').addEventListener('click', function(){
+      div.remove();
+    });
+  }
 
-function exportPos(){
-  const txt = markers.map(m=>`id:${m.id} px:${m.px.toFixed(1)} py:${m.py.toFixed(1)}`).join('\n');
-  navigator.clipboard.writeText(txt).then(()=>{
-    toast('📋 位置已複製！貼給豚豚更新HTML');
-  }).catch(()=>{
-    prompt('複製以下內容貼給豚豚：', txt);
+  function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2500);
+  }
+
+  // ═══════════════════════════════════
+  //  Bind events & start
+  // ═══════════════════════════════════
+  document.getElementById('adjBtn').addEventListener('click', toggleAdj);
+  document.getElementById('closeBtn').addEventListener('click', closeAll);
+  overlay.addEventListener('click', function(e){
+    if(e.target === overlay) closeAll();
   });
-}
+
+  // START
+  initMarkers();
+  setupGestures();
+  loadMap();
+
+})();
 </script>
 </body>
 </html>
