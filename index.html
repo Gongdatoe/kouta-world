@@ -133,7 +133,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:
 //  CONFIG
 // ═══════════════════════════════════
 const BASE = "./";
-const V = Date.now(); // 防快取版本號
+const V = Date.now();
+const LS_KEY = "kouta_v7_pos_only"; // 只存位置，新版本強制重置
+
+// 清除舊版本 localStorage
+try{
+  ['kouta_v3','kouta_v4','kouta_v5','kouta_v6'].forEach(k=>localStorage.removeItem(k));
+}catch(e){}
 const LS_KEY = "kouta_v6";
 
 const DEFAULTS = [
@@ -173,8 +179,12 @@ const mapImg = document.getElementById('mapImg');
 //  STORAGE
 // ═══════════════════════════════════
 function save(){
-  try{ localStorage.setItem(LS_KEY, JSON.stringify(markers)); }
-  catch(e){ toast("⚠️ 儲存空間不足"); }
+  try{
+    // 只存位置，不存內容！地點、文字、圖片永遠以 HTML 為主
+    const posOnly = markers.map(m=>({id:m.id, px:m.px, py:m.py}));
+    localStorage.setItem(LS_KEY, JSON.stringify(posOnly));
+  }
+  catch(e){ toast("⚠️ 儲存失敗"); }
 }
 function load(){
   try{ const d=localStorage.getItem(LS_KEY); return d?JSON.parse(d):null; }
