@@ -203,7 +203,7 @@ window.addEventListener('load', ()=>{
     document.getElementById('loading').innerHTML =
       '<p style="color:#e74c3c;font-size:14px;text-align:center">⚠️ 地圖載入失敗<br>請確認 GitHub 上有 Map.png</p>';
   };
-  mapImg.src = BASE + "Map.jpg";
+  mapImg.src = BASE + "Map.jpg?" + Date.now();
 
   setupGestures();
 });
