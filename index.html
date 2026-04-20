@@ -175,7 +175,7 @@ const mapImg=document.getElementById('map-img');
 const cont=document.getElementById('map-container');
 
 // ── Storage ──
-const LS="kouta_v3";
+const LS="kouta_v4";
 function saveAll(){try{localStorage.setItem(LS,JSON.stringify(markers));}catch(e){showToast("⚠️ 儲存空間不足");}}
 function loadSaved(){try{const d=localStorage.getItem(LS);return d?JSON.parse(d):null;}catch(e){return null;}}
 
@@ -219,8 +219,9 @@ window.addEventListener('load',()=>{
 // ── Map fit ──
 function fitMap(){
   if(!mapReady)return;
-  const vw=document.documentElement.clientWidth;
-  const vh=document.documentElement.clientHeight;
+  // 用 container 實際尺寸，避免手機瀏覽器工具列干擾
+  const vw=cont.offsetWidth;
+  const vh=cont.offsetHeight;
   scale=Math.max(vw/mapW, vh/mapH);
   tx=(vw-mapW*scale)/2;
   ty=(vh-mapH*scale)/2;
@@ -260,9 +261,9 @@ function createPin(m){
   cont.appendChild(el);
 }
 
-// 核心修正：用 mapW/mapH 計算絕對像素位置
 function placePin(el,m){
   if(!mapReady||!mapW||!mapH)return;
+  // 相對於 container 的位置
   const px=tx+(m.x/100)*mapW*scale;
   const py=ty+(m.y/100)*mapH*scale;
   el.style.left=px+'px';
