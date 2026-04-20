@@ -193,14 +193,19 @@ window.addEventListener('load',()=>{
     markers=DEFAULT_MARKERS.map(m=>({...m}));
   }
 
-  // 關鍵：地圖完全載入後才初始化
+  // 關鍵：地圖完全載入後，再等一個 frame 確保瀏覽器已算好 layout
   mapImg.onload=()=>{
     mapW=mapImg.naturalWidth;
     mapH=mapImg.naturalHeight;
     mapReady=true;
-    fitMap();
-    renderMarkers();
-    document.getElementById('loading').style.display='none';
+    // 等瀏覽器 layout 穩定後再放標記
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        fitMap();
+        renderMarkers();
+        document.getElementById('loading').style.display='none';
+      });
+    });
   };
   mapImg.onerror=()=>{
     document.getElementById('loading').innerHTML='<p style="color:#e74c3c">⚠️ 地圖載入失敗<br>請確認 GitHub 圖片設定</p>';
@@ -214,7 +219,8 @@ window.addEventListener('load',()=>{
 // ── Map fit ──
 function fitMap(){
   if(!mapReady)return;
-  const vw=window.innerWidth, vh=window.innerHeight;
+  const vw=document.documentElement.clientWidth;
+  const vh=document.documentElement.clientHeight;
   scale=Math.max(vw/mapW, vh/mapH);
   tx=(vw-mapW*scale)/2;
   ty=(vh-mapH*scale)/2;
