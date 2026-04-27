@@ -101,11 +101,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:
   const V = Date.now();
   const LS_KEY = "kouta_pos_v1";
 
-  // 清除舊版本資料
+  // 清除舊版本資料 + 如果目前版本資料壞掉也清掉
   try{
     ['kouta_v3','kouta_v4','kouta_v5','kouta_v6','kouta_v7_pos_only'].forEach(k=>{
       try{ localStorage.removeItem(k); }catch(e){}
     });
+    // 檢查目前版本資料是否合法
+    const test = localStorage.getItem(LS_KEY);
+    if(test){
+      try{
+        const parsed = JSON.parse(test);
+        if(!Array.isArray(parsed)) throw new Error('bad');
+      }catch(e){
+        localStorage.removeItem(LS_KEY); // 壞掉就清
+      }
+    }
   }catch(e){}
 
   // ═══════════════════════════════════
@@ -116,14 +126,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:
     {id:2, loc:"瑞士・馬特洪峰",   msg:"奶奶你看我堆雪人，有沒有很可愛？⛄",   px:48.2, py:32.7, img:"img2.jpg"},
     {id:3, loc:"法國・凡爾賽宮",   msg:"奶奶快點跟我來這裡追蝴蝶吹泡泡 🦋",   px:47.0, py:34.1, img:"img3.jpg"},
     {id:4, loc:"南非・薩凡納狩獵", msg:"奶奶這裡好多動物哦！噓，要小聲一點哦！🦏", px:52.9, py:67.7, img:"img4.jpg"},
-    {id:5,  loc:"",msg:"",px:15.1,py:40.5,img:""},
-    {id:6,  loc:"",msg:"",px:32.1,py:57.6,img:""},
+    {id:5, loc:"美國・舊金山灣區", msg:"奶奶我們去找美國姨姨看小baby！🌉", px:15.1, py:40.5, img:"img5.jpg"},
+    {id:6, loc:"巴西・里約耶穌像", msg:"奶奶上帝會保佑你健健康康的唷！🙏", px:32.1, py:57.6, img:"img6.jpg"},
     {id:7, loc:"埃及・吉薩金字塔", msg:"奶奶那個是金字塔耶！木乃伊會不會出來嚇熊？！🏺", px:54.2, py:46.2, img:"img7.jpg"},
-    {id:8,  loc:"",msg:"",px:73.5,py:53.9,img:""},
-    {id:9,  loc:"",msg:"",px:84.8,py:73.5,img:""},
-    {id:10, loc:"",msg:"",px:35.8,py:15.7,img:""},
-    {id:11, loc:"",msg:"",px:52.1,py:28.3,img:""},
-    {id:12, loc:"",msg:"",px:75.8,py:36.0,img:""},
+    {id:8, loc:"泰國・普吉島",     msg:"奶奶夏天到了我們來玩騎馬打水仗 🏖️", px:73.5, py:53.9, img:"img8.jpg"},
+    {id:9, loc:"澳洲・布里斯本",   msg:"奶奶我是東華抱歉隊的王牌9號哦！抱歉～🥍", px:84.8, py:73.5, img:"img9.jpg"},
+    {id:10, loc:"北極圈・格陵蘭",  msg:"奶奶就是這個光！就是這個光！✨🐕", px:35.8, py:15.7, img:"img10.jpg"},
+    {id:11, loc:"北歐・世界最美小鎮", msg:"奶奶你看，我從魔法學院畢業囉！⚡🦉", px:52.1, py:28.3, img:"img11.jpg"},
+    {id:12, loc:"中國・萬里長城",  msg:"奶奶他們說投10塊當一次秦始皇！🐎", px:75.8, py:36.0, img:"img12.jpg"},
   ];
 
   // ═══════════════════════════════════
